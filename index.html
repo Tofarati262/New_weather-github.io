@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous">
+  </script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    corePlugins: {
+      preflight: false,
+    }
+  }
+</script>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.css">
+  <link rel="icon" href="cloud gif.gif" title="weather symbol">
+  <script src="/dist/index.js" type="module"></script>
+  <title>New Weather</title>
+</head>
+
+
+<body>
+  <div class="header">
+    <img src="cloud gif.gif" class="logo-icon" alt="rain" title="weather symbol">
+    <h1>New Weather</h1>
+  </div>
+  <div class="card">
+    <div class="search">
+      <input type="text" class="search-input" placeholder="Enter City Name" spellcheck="false">
+      <button class="search-button"><img src="search.png" alt="search" title="search"></button>
+    </div>
+    <div class="weather">
+      <img src="rain.png" class="weather-icon" alt="rain" title="weather symbol">
+      <h1 class="temp">_°C</h1>
+      <h2 class="city">_ _ _</h2>
+      <div class="details">
+        <div class="col">
+          <img src="humidity.png" alt="humidity" title="humidity">
+          <div>
+            <p class="humidity">50%</p>
+            <p>Humidity</p>
+          </div>
+        </div>
+        <div class="col">
+          <img src="wind.png" alt="wind" title="wind">
+          <div>
+            <p class="wind">15km/hr</p>
+            <p>Wind Speed</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <audio autoplay muted>
+        <source src="audio/new breakcore.wav">
+        This Browser does not support audio format
+      </audio>
+    </div>
+  </div>
+</body>
+<script>
+  console.log("HEY");
+  const apikey = "1e8233b8bada2fd778c41547c9ced977";
+  const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric";
+  const searchBox = $(".search-input");
+  const searchBtn = $(".search-button");
+  const weatherIcon = $(".weather-icon");
+
+  async function checkweather(city) {
+    const response = await fetch(`${apiUrl}&q=${city}&appid=${apikey}`);
+    var data = await response.json();
+
+    $(".city").text(data.name)
+    $(".temp").text(Math.round(data.main.temp) + "°C")
+    $(".humidity").text(data.main.humidity + "%")
+    $(".wind").text(data.wind.speed + "km/hr")
+
+    console.log(data);
+    if (data.weather[0].main == "Clouds") {
+      weatherIcon.attr("src", "clouds.png")
+    }
+    else if (data.weather[0].main == "Rain") {
+      weatherIcon.attr("src", "rain.png")
+    }
+    else if (data.weather[0].main == "Drizzle") {
+      weatherIcon.attr("src", "drizzle.png")
+    }
+    else if (data.weather[0].main == "Mist") {
+      weatherIcon.attr("src", "mist.png")
+    }
+    else if (data.weather[0].main == "Clear") {
+      weatherIcon.attr("src", "clear.png")
+    }
+  }
+
+  searchBtn.click(() => { checkweather(searchBox.val()) })
+  console.log("HEY");
+</script>
+
+</html>
